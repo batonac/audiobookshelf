@@ -11,7 +11,7 @@ on:
         required: true
         default: 'latest'
   push:
-    branches: [main,master,feat-reverse-rss]
+    branches: [feat-reverse-rss]
     tags:
       - 'v*.*.*'
     # Only build when files in these directories have been changed
@@ -24,7 +24,7 @@ on:
 jobs:
   build:
     if: "!contains(github.event.head_commit.message, 'skip ci')"
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
       - name: Check out
@@ -36,7 +36,7 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository_owner }}/audiobookshelf
           tags: |
-            type=edge,branch=master
+            type=edge,branch=feat-reverse-rss
             type=semver,pattern={{version}}
 
       - name: Setup QEMU
@@ -63,11 +63,10 @@ jobs:
       - name: Build image
         uses: docker/build-push-action@v3
         with:
-          tags: ${{ github.event.inputs.tags || steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
+          tags: ghcr.io/${{ github.repository_owner }}/audiobookshelf:${{ github.event.inputs.tags || 'latest' }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
 

@@ -64,6 +64,7 @@ export default {
       currentFeed: null,
       metadataDetails: {
         preventIndexing: true,
+        reverseOrder: false,
         ownerName: '',
         ownerEmail: ''
       }

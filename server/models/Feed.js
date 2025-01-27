@@ -3,12 +3,10 @@ const { DataTypes, Model } = require('sequelize')
 const Logger = require('../Logger')
 
 const RSS = require('../libs/rss')
-const { reverse } = require('dns')
 
 /**
  * @typedef FeedOptions
  * @property {boolean} preventIndexing
- * @property {boolean} reverseOrder
  * @property {string} ownerName
  * @property {string} ownerEmail
  */
@@ -60,8 +58,6 @@ class Feed extends Model {
     this.explicit
     /** @type {boolean} */
     this.preventIndexing
-    /** @type {boolean} */
-    this.reverseOrder
     /** @type {string} */
     this.coverPath
     /** @type {UUIDV4} */
@@ -137,7 +133,6 @@ class Feed extends Model {
 
     if (feedOptions) {
       feedObj.preventIndexing = feedOptions.preventIndexing
-      feedObj.reverseOrder = feedOptions.reverseOrder
       feedObj.ownerName = feedOptions.ownerName
       feedObj.ownerEmail = feedOptions.ownerEmail
     }
@@ -230,7 +225,6 @@ class Feed extends Model {
 
     if (feedOptions) {
       feedObj.preventIndexing = feedOptions.preventIndexing
-      feedObj.reverseOrder = feedOptions.reverseOrder
       feedObj.ownerName = feedOptions.ownerName
       feedObj.ownerEmail = feedOptions.ownerEmail
     }
@@ -320,7 +314,6 @@ class Feed extends Model {
 
     if (feedOptions) {
       feedObj.preventIndexing = feedOptions.preventIndexing
-      feedObj.reverseOrder = feedOptions.reverseOrder
       feedObj.ownerName = feedOptions.ownerName
       feedObj.ownerEmail = feedOptions.ownerEmail
     }
@@ -395,7 +388,6 @@ class Feed extends Model {
         ownerEmail: DataTypes.STRING,
         explicit: DataTypes.BOOLEAN,
         preventIndexing: DataTypes.BOOLEAN,
-        reverseOrder: DataTypes.BOOLEAN,
         coverPath: DataTypes.STRING
       },
       {
@@ -621,13 +613,8 @@ class Feed extends Model {
     }
 
     const rssfeed = new RSS(rssData)
-    let episodes = this.feedEpisodes || []
-    if (this.reverseOrder) {
-      episodes = [...episodes].reverse()
-    }
-
-    episodes.forEach(episode => {
-      rssfeed.item(episode.getRSSData(hostPrefix))
+    this.feedEpisodes.forEach((ep) => {
+      rssfeed.item(ep.getRSSData(hostPrefix))
     })
     return rssfeed.xml()
   }
@@ -664,7 +651,6 @@ class Feed extends Model {
         type: this.podcastType,
         language: this.language,
         preventIndexing: this.preventIndexing,
-        reverseOrder: this.reverseOrder,
         ownerName: this.ownerName,
         ownerEmail: this.ownerEmail
       },
@@ -686,7 +672,6 @@ class Feed extends Model {
         title: this.title,
         description: this.description,
         preventIndexing: this.preventIndexing,
-        reverseOrder: this.reverseOrder,
         ownerName: this.ownerName,
         ownerEmail: this.ownerEmail
       }

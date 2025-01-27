@@ -20,12 +20,6 @@
             </div>
             <div>{{ currentFeed.meta.preventIndexing ? 'Yes' : 'No' }}</div>
           </div>
-          <div v-if="currentFeed.meta.reverseOrder" class="flex py-0.5">
-            <div class="w-48">
-              <span class="text-white text-opacity-60 uppercase text-sm">{{ $strings.LabelRSSFeedReverseOrder }}</span>
-            </div>
-            <div>{{ currentFeed.meta.reverseOrder ? 'Yes' : 'No' }}</div>
-          </div>
           <div v-if="currentFeed.meta.ownerName" class="flex py-0.5">
             <div class="w-48">
               <span class="text-white text-opacity-60 uppercase text-sm">{{ $strings.LabelRSSFeedCustomOwnerName }}</span>
@@ -70,7 +64,6 @@ export default {
       currentFeed: null,
       metadataDetails: {
         preventIndexing: true,
-        reverseOrder: false,
         ownerName: '',
         ownerEmail: ''
       }
